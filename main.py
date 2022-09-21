@@ -1,4 +1,5 @@
 #!/bin/python3
+# -*_ coding: utf-8 _*_
 
 
 README = '''
@@ -62,7 +63,7 @@ def getInput():
     return startTime,endTime,totalDays
 
 def parseConfig() -> list :
-    configFile = open('config.txt','r')
+    configFile = open('config.txt','r',encoding='utf-8')
     passDate = [] # 用于存储忽略日期的 datetime 对象
     passList = [] # 用于存储忽略日期的 str 格式，以便最后展示给用户
 
@@ -75,9 +76,9 @@ def parseConfig() -> list :
         logging.debug(line)
         if len(line) < 10:
             passList.append(line)
-            logging.debug(f'The line is {line}.')
+            logging.debug('The line is {}.'.format(line))
             singleDay = datetime.datetime.strptime(line,'%Y/%m/%d')
-            logging.debug(f'singleDay is {singleDay}')
+            logging.debug('singleDay is {}'.format(singleDay))
             passDate.append(singleDay)
             
         #     continue
@@ -122,34 +123,34 @@ def main():
         if (startTime not in passDate) and (datetime.datetime.weekday(startTime) != 6): 
             count += 1
         startTime += unitday
-    logging.debug(f'The reuslt is {count} day(s).')
+    logging.debug('The reuslt is {} day(s).'.format(count))
 
     if count <= 14:
-        print(f'''
-    自图书借出({startDay.strftime('%Y/%m%d')})至图书归还({endTime.strftime('%Y/%m%d')}),历时{totalDays.days}
+        print('''
+    自图书借出({})至图书归还({}),历时{}
     根据配置文件，以下日期闭馆，不计入读者借阅时间
     (周日日常闭馆，系统已自动排除，下列日期为人工添加)：
-{passStr}
+{}
 
-    读者借阅图书时间为{count}天
+    读者借阅图书时间为{}天
 
     \033[31m图书未逾期！\033[0m
-        ''')
+        '''.format(startDay.strftime('%Y/%m%d'),endTime.strftime('%Y/%m%d'),totalDays.days,passStr,count))
     elif count > 14:
         fine = (count - 14) * 0.5
-        print(f'''
-    自图书借出({startDay.strftime('%Y/%m%d')})至图书归还({endTime.strftime('%Y/%m%d')}),历时{totalDays.days}天
+        print('''
+    自图书借出({})至图书归还({}),历时{}天
     由根据配置文件，以下日期闭馆，不计入读者借阅时间
     (周日日常闭馆，系统已自动排除，下列日期为人工添加)：
-{passStr}
+{}
 
-    读者借阅图书时间为{count}天
+    读者借阅图书时间为{}天
 
-    \033[31m图书逾期{count - 14}天，应缴纳违约金：{fine}元！\033[0m
-        ''')
+    \033[31m图书逾期{}天，应缴纳违约金：{}元！\033[0m
+        '''.format(startDay.strftime('%Y/%m%d'),endTime.strftime('%Y/%m%d'),totalDays.days,passStr,count,count-14,fine))
 
     logging.debug('Program End')
 
 if __name__ == "__main__":
     main()
-    time.sleep(120)
+    # time.sleep(120)
