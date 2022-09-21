@@ -29,6 +29,7 @@ logging.disable(logging.CRITICAL)
 
 print(README)
 
+# 控制台输出红色，参见：https://blog.51cto.com/wenyule/2838791
 
 
 def getInput():
