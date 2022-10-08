@@ -76,6 +76,7 @@ def parseConfig() -> list :
         if len(line) < 7:
             continue
 
+        # 为配置文件中的行标记flag
         if line.startswith('#'):
             continue
         elif line == 'include special day:':
@@ -91,6 +92,7 @@ def parseConfig() -> list :
             pass
 
         if flag == 'special day' :
+            # 转换str日期对象为datetime对象
             line = datetime.datetime.strptime(line,'%Y/%m/%d')
             specialDay.append(line)
         elif flag == 'single day':
