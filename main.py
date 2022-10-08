@@ -64,42 +64,53 @@ def getInput():
     return startTime,endTime,totalDays
 
 def parseConfig() -> list :
-    configFile = open('config.txt','r',encoding='utf-8')
-    passDate = [] # 用于存储忽略日期的 datetime 对象
-    passList = [] # 用于存储忽略日期的 str 格式，以便最后展示给用户
+    fi = open('config.txt','r',encoding='utf8')
 
+    flag = 0
+    specialDay = []
+    singleDay = []
+    timeRange = []
 
-    for line in configFile:
-        line = line.strip() # 去除非必要空白字符
-        if line.startswith('#') or len(line) == 0 or line.startswith('single day') or line.startswith('time range'):
-            # ignore useless lines
+    for line in fi:
+        line = line.strip()
+        if len(line) < 7:
             continue
-        logging.debug(line)
-        if len(line) < 10:
-            passList.append(line)
-            logging.debug('The line is {}.'.format(line))
-            singleDay = datetime.datetime.strptime(line,'%Y/%m/%d')
-            logging.debug('singleDay is {}'.format(singleDay))
-            passDate.append(singleDay)
-            
-        #     continue
-        if len(line) > 16:
-            passList.append(line)
+
+        if line.startswith('#'):
+            continue
+        elif line == 'include special day:':
+            flag = 'special day'
+            continue
+        elif line == 'single day:':
+            flag = 'single day'
+            continue
+        elif line == 'time range:':
+            flag = 'time range'
+            continue
+        else:
+            pass
+
+        if flag == 'special day' :
+            line = datetime.datetime.strptime(line,'%Y/%m/%d')
+            specialDay.append(line)
+        elif flag == 'single day':
+            line = datetime.datetime.strptime(line,'%Y/%m/%d')
+            singleDay.append(line)
+        elif flag == 'time range':
             rangeStart,rangeEnd = tuple(line.split(' - ')) # 将'time range'的开始日期和结束日期分离
-            
+                
             # 解析出datatime对象 
             rangeStart = datetime.datetime.strptime(rangeStart,'%Y/%m/%d')
             rangeEnd = datetime.datetime.strptime(rangeEnd,'%Y/%m/%d')
-            logging.debug(rangeStart)
-            logging.debug(rangeEnd)
 
             # 创建一个时间单位，以便于下面将时间段中的时期加入排除列表中
             unitDay = datetime.timedelta(days=1)
             while rangeStart <= rangeEnd:
-                passDate.append(rangeStart)
+                timeRange.append(rangeStart)
                 rangeStart += unitDay
-        logging.debug(passDate)
-    return passDate,passList
+        else:
+            pass
+    return specialDay,singleDay,timeRange
 
 
 
@@ -108,8 +119,7 @@ def main():
     logging.debug('Program Start')
 
     startTime,endTime,totalDays=  getInput()
-    passDate,passList = parseConfig()
-    passStr = "\n".join(passList) # 所有忽略日期的字符串形式
+    specialDay,singleDay,timeRange = parseConfig()
 
     # calculate the count of days
     count = 0
@@ -121,7 +131,9 @@ def main():
     # 对从借书到还书中的每一天进行遍历
     while startTime <= endTime:
         # 如果日期在排除列表中，或日期是星期天，则跳过
-        if (startTime not in passDate) and (datetime.datetime.weekday(startTime) != 6): 
+        if (startTime not in timeRange) and (datetime.datetime.weekday(startTime) != 6): 
+            count += 1
+        if startTime in specialDay:
             count += 1
         startTime += unitday
     logging.debug('The reuslt is {} day(s).'.format(count))
@@ -129,26 +141,22 @@ def main():
     if count <= 14:
         print('''
     自图书借出({})至图书归还({}),历时{}
-    根据配置文件，以下日期闭馆，不计入读者借阅时间
-    (周日日常闭馆，系统已自动排除，下列日期为人工添加)：
-{}
+    排除的日期详见配置文件。
 
     读者借阅图书时间为{}天
 
     \033[31m图书未逾期！\033[0m
-        '''.format(startDay.strftime('%Y/%m%d'),endTime.strftime('%Y/%m%d'),totalDays.days,passStr,count))
+        '''.format(startDay.strftime('%Y/%m%d'),endTime.strftime('%Y/%m%d'),totalDays.days,count))
     elif count > 14:
         fine = (count - 14) * 0.5
         print('''
     自图书借出({})至图书归还({}),历时{}天
-    由根据配置文件，以下日期闭馆，不计入读者借阅时间
-    (周日日常闭馆，系统已自动排除，下列日期为人工添加)：
-{}
+    排除的日期详见配置文件。
 
     读者借阅图书时间为{}天
 
     \033[31m图书逾期{}天，应缴纳违约金：{}元！\033[0m
-        '''.format(startDay.strftime('%Y/%m%d'),endTime.strftime('%Y/%m%d'),totalDays.days,passStr,count,count-14,fine))
+        '''.format(startDay.strftime('%Y/%m%d'),endTime.strftime('%Y/%m%d'),totalDays.days,count,count-14,fine))
 
     logging.debug('Program End')
 
