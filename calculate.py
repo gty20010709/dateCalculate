@@ -27,7 +27,7 @@ import time
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s:%(message)s')
 logging.disable(logging.CRITICAL)
 
-print(README)
+# print(README)
 
 # 控制台输出红色，参见：https://blog.51cto.com/wenyule/2838791
 
@@ -135,8 +135,10 @@ def main():
         # 如果日期在排除列表中，或日期是星期天，则跳过
         if (startTime not in timeRange) and (datetime.datetime.weekday(startTime) != 6): 
             count += 1
-        if startTime in specialDay:
+        elif startTime in specialDay:
             count += 1
+        # if startTime in specialDay:
+            # count += 1
         startTime += unitday
     logging.debug('The reuslt is {} day(s).'.format(count))
 
@@ -164,4 +166,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    time.sleep(120)
+    # time.sleep(120)
