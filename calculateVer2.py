@@ -55,13 +55,14 @@ def parseConfig(path):
                 rangeStart += unitDay
         else:
             pass
+        passDay = timeRange + singleDay
 
     fi.close()
     logging.debug("Finish to parse config file")
-    return specialDay,singleDay,timeRange
+    return specialDay,passDay
 
 
-def calculate(startDay,endDay,passDay,specialDay,singleDay):
+def calculate(startDay,endDay,passDay,specialDay):
     logging.debug('Start to Calculate')
     startDay = datetime.datetime.strptime(startDay,'%Y/%m/%d')
     endDay = datetime.datetime.strptime(endDay,'%Y/%m/%d')
@@ -72,20 +73,17 @@ def calculate(startDay,endDay,passDay,specialDay,singleDay):
     pointDay = startDay # 当作一个指针
     while pointDay <= endDay:
         if pointDay in passDay:
-            logging.debug(f'{pointDay} 在passDay中')
+            logging.debug(f'{pointDay} 在passDay中，排除')
             pointDay += timeUnit
             continue
         elif pointDay in specialDay:
-            logging.debug(f'{pointDay} 在special中，加入计算')
+            logging.debug(f'{pointDay} 在special中，计入有效时间')
             count += 1
             pointDay += timeUnit
+            continue
         elif (datetime.datetime.weekday(pointDay) == 6):
             # logging.debug(f'周几：{datetime.datetime.weekday(pointDay)}')
             logging.debug(f'{pointDay} 是周日，排除')
-            pointDay += timeUnit
-            continue
-        elif pointDay in singleDay:
-            logging.debug(f'{pointDay} 属于手动排除的singleDay')
             pointDay += timeUnit
             continue
         else:
@@ -106,11 +104,11 @@ def main():
     endDay = '2022/10/10'
 
     configPath = 'config.txt'
-    specialDay,singelDay,timeRange = parseConfig(configPath)
+    specialDay,passDay = parseConfig(configPath)
     # logging.debug(specialDay)
     # logging.debug(singelDay)
     # logging.debug(timeRange)
-    count,totalDays = calculate(startDay,endDay,specialDay,singelDay,timeRange)
+    count,totalDays = calculate(startDay,endDay,passDay,specialDay)
     print(f'''
 书籍持有时间{totalDays}
 有效借阅时间{count}天
