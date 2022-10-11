@@ -1,13 +1,18 @@
 import datetime
 import logging
 import time
-
+20
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s:%(message)s')
 # logging.disable(logging.CRITICAL)
 
 
 def getInput():
-    pass
+    startDay = datetime.datetime.strptime(input('图书借出的日期是：'),'%Y/%m/%d')
+    try:
+        endDay = datetime.datetime.strptime(input('（不输入就是程序运行当天）\n图书归还的日期是：'),'%Y/%m/%d')
+    except:
+        endDay = datetime.datetime.today()
+    return startDay,endDay
 
 def parseConfig(path):
     specialDay = [] # 需要手动加入计算的日期
@@ -64,8 +69,8 @@ def parseConfig(path):
 
 def calculate(startDay,endDay,passDay,specialDay):
     logging.debug('Start to Calculate')
-    startDay = datetime.datetime.strptime(startDay,'%Y/%m/%d')
-    endDay = datetime.datetime.strptime(endDay,'%Y/%m/%d')
+    # startDay = datetime.datetime.strptime(startDay,'%Y/%m/%d')
+    # endDay = datetime.datetime.strptime(endDay,'%Y/%m/%d')
     totalDays = endDay - startDay
 
     timeUnit = datetime.timedelta(days=1)
@@ -100,8 +105,10 @@ def calculate(startDay,endDay,passDay,specialDay):
 
 def main():
     logging.debug('Program Start')
-    startDay = '2022/9/15'
-    endDay = '2022/10/10'
+    # Test datetime
+    # startDay = '2022/9/15'
+    # endDay = '2022/10/11'
+    startDay,endDay = getInput()
 
     configPath = 'config.txt'
     specialDay,passDay = parseConfig(configPath)
@@ -112,6 +119,8 @@ def main():
     print(f'''
 书籍持有时间{totalDays}
 有效借阅时间{count}天
+逾期{count - 14}天
+应缴违约金{0.5*(count - 14)}
 ''')
 
 
