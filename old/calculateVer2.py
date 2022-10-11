@@ -1,7 +1,6 @@
 import datetime
 import logging
 import time
-20
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s:%(message)s')
 # logging.disable(logging.CRITICAL)
 
