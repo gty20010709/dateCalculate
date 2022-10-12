@@ -1,7 +1,7 @@
 import datetime
 import logging
 import time
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s:%(message)s')
+logging.basicConfig(filename = 'log.txt',encoding='utf8',level=logging.DEBUG,format='%(asctime)s %(levelname)s:%(message)s')
 # logging.disable(logging.CRITICAL)
 
 
@@ -59,7 +59,7 @@ def parseConfig(path):
                 rangeStart += unitDay
         else:
             pass
-        passDay = timeRange + singleDay
+    passDay = timeRange + singleDay
 
     fi.close()
     logging.debug("Finish to parse config file")
