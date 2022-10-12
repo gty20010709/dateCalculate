@@ -50,11 +50,11 @@ class Application(tk.Frame):
         self.start_button = tk.Button(self,text='计算',font='8',command=self.getResult).grid(row=5,column=5)
 
         # bind shortcuts
-        root.bind('<Control-s>',self.saveConfig())
-        root.bind('<Control-o>',self.loadConfig())
-        root.bind('<Control-l>',self.loadLog())
-        root.bind('<Control-r>',self.loadConfig())
-        root.bind('<Control-h>',self.loadHelp())
+        root.bind('<Control-s>',self.saveConfig)
+        root.bind('<Control-o>',self.loadConfig)
+        root.bind('<Control-l>',self.loadLog)
+        root.bind('<Control-r>',self.loadConfig)
+        root.bind('<Control-h>',self.loadHelp)
 
 
     def saveConfig(self,event=None):
@@ -161,7 +161,7 @@ class Application(tk.Frame):
         startDay = datetime.datetime.strptime(str(self.startDay.get()),'%Y/%m/%d')
         endDay = datetime.datetime.strptime(str(self.endDay.get()),'%Y/%m/%d')
         count,totalDays = self.calculate(startDay,endDay,passDay,specialDay)
-        result = f'''书籍持有时间{totalDays}
+        result = f'''书籍持有时间{totalDays.days}天
 有效借阅时间{count}天
 逾期{count - 14}天
 应缴违约金{0.5*(count - 14)}
@@ -188,6 +188,7 @@ class Application(tk.Frame):
                 fo.write(fi.read())
         self.loadConfig()
 
+        
 
 
 if __name__ == '__main__':
