@@ -5,6 +5,9 @@ import logging
 logging.basicConfig(filename = 'log.txt',level=logging.DEBUG,format='%(levelname)s:%(message)s',encoding='utf8')
 # logging.disable(logging.CRITICAL)
 
+
+
+
 class Application(tk.Frame):
     def __init__(self,master):
         super().__init__(master)
@@ -156,6 +159,7 @@ class Application(tk.Frame):
         return count,totalDays
     
     def getResult(self,event=None):
+        self.resetLog()
         path = 'config.txt'
         specialDay,passDay = self.parseConfig(path)
         startDay = datetime.datetime.strptime(str(self.startDay.get()),'%Y/%m/%d')
@@ -188,13 +192,17 @@ class Application(tk.Frame):
                 fo.write(fi.read())
         self.loadConfig()
 
+    def resetLog(self,event=None):
+        with open('log.txt','w',encoding='utf8') as f:
+            f.write('')
+
         
 
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.title('图书逾期计算程序')
-    root.geometry('800x600')
+    root.geometry('900x700')
 
     app = Application(master=root)
 

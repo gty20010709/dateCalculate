@@ -1,6 +1,6 @@
 import datetime
 import logging
-import time
+
 logging.basicConfig(filename = 'log.txt',encoding='utf8',level=logging.DEBUG,format='%(asctime)s %(levelname)s:%(message)s')
 # logging.disable(logging.CRITICAL)
 
@@ -103,6 +103,8 @@ def calculate(startDay,endDay,passDay,specialDay):
 
 
 def main():
+    with open('log.txt','w',encoding='utf8') as f:
+        f.write('')
     logging.debug('Program Start')
     # Test datetime
     # startDay = '2022/9/15'
