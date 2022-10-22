@@ -137,21 +137,21 @@ class Application(tk.Frame):
         pointDay = startDay # 当作一个指针
         while pointDay <= endDay:
             if pointDay in passDay:
-                logging.debug(f'{pointDay} 在passDay中，排除')
+                logging.debug('{pointDay} 在passDay中，排除'.format(pointDay = pointDay))
                 pointDay += timeUnit
                 continue
             elif pointDay in specialDay:
-                logging.debug(f'{pointDay} 在special中，计入有效时间')
+                logging.debug('{pointDay} 在special中，计入有效时间'.format(pointDay = pointDay))
                 count += 1
                 pointDay += timeUnit
                 continue
             elif (datetime.datetime.weekday(pointDay) == 6):
                 # logging.debug(f'周几：{datetime.datetime.weekday(pointDay)}')
-                logging.debug(f'{pointDay} 是周日，排除')
+                logging.debug('{pointDay} 是周日，排除'.format(pointDay = pointDay))
                 pointDay += timeUnit
                 continue
             else:
-                logging.debug(f'{pointDay} 是有效借阅时间')
+                logging.debug('{pointDay} 是有效借阅时间'.format(pointDay = pointDay))
                 count += 1
                 pointDay += timeUnit
         
@@ -165,11 +165,11 @@ class Application(tk.Frame):
         startDay = datetime.datetime.strptime(str(self.startDay.get()),'%Y/%m/%d')
         endDay = datetime.datetime.strptime(str(self.endDay.get()),'%Y/%m/%d')
         count,totalDays = self.calculate(startDay,endDay,passDay,specialDay)
-        result = f'''书籍持有时间{totalDays.days}天
-有效借阅时间{count}天
-逾期{count - 14}天
-应缴违约金{0.5*(count - 14)}
-        '''
+        result = '''书籍持有时间{}天
+有效借阅时间{}天
+逾期{}天
+应缴违约金{}
+        '''.format(totalDays.days,count,count-14,0.5*(count -14))
         self.output.config(text=result)
 
     def loadLog(self,event = None):
