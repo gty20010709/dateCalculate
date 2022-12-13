@@ -125,5 +125,7 @@ def main():
 '''.format(totalDays.days,count,count-14,0.5*(count -14)))
 
 
+
 if __name__ == '__main__':
     main()
+    input("按回车退出...")
