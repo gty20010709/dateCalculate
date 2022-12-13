@@ -17,40 +17,40 @@ class Application(tk.Frame):
         self.createWidget()
     
     def createWidget(self):
-        tk.Button(self,text='保存配置',font=(5),command=self.saveConfig).grid(row=0,column=0)
-        tk.Button(self,text="加载配置",font=(5),command=self.loadConfig).grid(row=0,column=1)
-        tk.Button(self,text='加载日志',font=(5),command=self.loadLog).grid(row=0,column=2)
-        tk.Button(self,text='帮助信息',font=(5),command=self.loadHelp).grid(row=0,column=3)
-        tk.Button(self,text='重置配置文件',font=(5),command=self.resetConfig).grid(row=0,column=4)
+        tk.Button(self,text='保存配置',command=self.saveConfig).grid(row=0,column=0)
+        tk.Button(self,text="加载配置",command=self.loadConfig).grid(row=0,column=1)
+        tk.Button(self,text='加载日志',command=self.loadLog).grid(row=0,column=2)
+        tk.Button(self,text='帮助信息',command=self.loadHelp).grid(row=0,column=3)
+        tk.Button(self,text='重置配置文件',command=self.resetConfig).grid(row=0,column=4)
         
 
         self.configFile = tk.StringVar()
         # self.configFile.set(open('config.txt','r',encoding='utf8').read())
-        self.editor_title = tk.Label(self,text="配置文件编辑区",font=(10))
+        self.editor_title = tk.Label(self,text="配置文件编辑区")
         self.editor_title.grid(row=1,column=0,columnspan=5)
         self.editor = tk.Text(self,bg='#E1FFFF')
         self.editor.grid(row=2,column=0,columnspan=5)
 
 
-        self.output_title = tk.Label(self,text='信息输出区',font=(10))
+        self.output_title = tk.Label(self,text='信息输出区')
         self.output_title.grid(row=3,column=0,columnspan=5)
         self.output = tk.Label(self,bg='#FFFFE0',text='请确认配置文件后，输入借书和还书日期，\n再点击“计算”按钮，此处将输出结果！\n\
-如果修改了配置，计算前请先点击保存配置！',font=(5))
+如果修改了配置，计算前请先点击保存配置！')
         self.output.grid(row=4,column=0,columnspan=5)
 
-        self.start_lable = tk.Label(self,text='开始日期是',font=(8)).grid(row=5,column=0)
+        self.start_lable = tk.Label(self,text='开始日期是').grid(row=5,column=0)
         self.startDay = tk.StringVar()
         self.start_entry = tk.Entry(self,textvariable=self.startDay)
         self.start_entry.grid(row=5,column=1)
         self.startDay.set(datetime.datetime.strftime(datetime.datetime.today(),'%Y/%m/%d'))
 
-        self.end_lable = tk.Label(self,text='结束日期是',font=(8)).grid(row=5,column=2)
+        self.end_lable = tk.Label(self,text='结束日期是').grid(row=5,column=2)
         self.endDay = tk.StringVar()
         self.end_entry = tk.Entry(self,textvariable=self.endDay)
         self.end_entry.grid(row=5,column=3)
         self.endDay.set(datetime.datetime.strftime(datetime.datetime.today(),'%Y/%m/%d'))
 
-        self.start_button = tk.Button(self,text='计算',font='8',command=self.getResult).grid(row=5,column=5)
+        self.start_button = tk.Button(self,text='计算',command=self.getResult).grid(row=5,column=5)
 
         # bind shortcuts
         root.bind('<Control-s>',self.saveConfig)
